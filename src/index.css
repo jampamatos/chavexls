@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Dark variant by class `.dark` */
+@custom-variant dark (&:is(.dark *));
+
+/* Tokens/colors */
+:root {
+  /* ==== Brand: ChaveXLS (claro) ==== */
+  --brand-navy: #0F172A;   /* base */
+  --brand-blue: #2563EB;   /* CTA */
+  --brand-green:#16A34A;   /* sucesso */
+
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  /* cinzas utilitários */
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+
+  /* >>> CTA AZUL <<< */
+  --primary: var(--brand-blue);
+  --primary-foreground: #ffffff;
+
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0f172a;
+
+  /* áreas de destaque suaves com texto azul */
+  --accent: #eff6ff;
+  --accent-foreground: var(--brand-blue);
+
+  --destructive: #ef4444;
+  --border: #e5e7eb;
+  --ring: #94a3b8;
+  --radius: 0.75rem;
+}
+
+/* Dark theme by class `.dark` */
+.dark {
+  /* ==== Brand: ChaveXLS (escuro) ==== */
+  --background: #0b1220;
+  --foreground: #e5e7eb;
+
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+
+  --primary: var(--brand-blue);
+  --primary-foreground: #ffffff;
+
+  --secondary: #0f172a;
+  --secondary-foreground: #e5e7eb;
+
+  --accent: #0b1220;
+  --accent-foreground: #93c5fd;
+
+  --destructive: #f87171;
+  --border: #1f2937;
+  --ring: #334155;
+}
+
+/* Map tokens to Tailwind v4 utilities */
+@theme inline{
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+}
+
+/* Base */
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
