@@ -1,6 +1,26 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <!-- GA4 (build-time; uses %VITE_GA4_ID%) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA4_ID%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+
+      gtag('js', new Date());
+
+      /* LGPD: allow analytics, deny ads by default */
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'granted',
+      });
+
+      /* No automatic page_view; we send our own events */
+      gtag('config', '%VITE_GA4_ID%', { send_page_view: false, debug_mode: true });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
