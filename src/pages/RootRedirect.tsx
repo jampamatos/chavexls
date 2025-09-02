@@ -1,9 +1,10 @@
+import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const VAR_KEY = "chavexls_variant";
 
-export default function RootRedirect() {
+export default function RootRedirect(): React.ReactElement | null {
     const navigate = useNavigate()
     useEffect(() => {
         // tenta ler variante já atribuida
@@ -14,5 +15,7 @@ export default function RootRedirect() {
             try { localStorage.setItem(VAR_KEY, variant) } catch {} 
         }
         navigate(variant === "A" ? "/a" : "/b", { replace: true })
-    }, [navigate])
+    }, [navigate]);
+
+    return null;
 }
