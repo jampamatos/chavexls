@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { trackEvent } from '../lib/analytics';
 import { Link } from 'react-router-dom';
 import XlsxPreview from '../components/XlsxPreview';
@@ -82,9 +82,11 @@ function DatabaseIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export default function VariantA() {
+    const [selectedPlan, setSelectedPlan] = useState<'starter' | 'business' | ''>('');
+
     // Fire a page-level demo view with variant tag
     useEffect(() => { 
-        trackEvent("demo_view", { variant: "A" }) 
+        trackEvent("demo_view", { variant: "A" });
     }, []);
 
     // CTA Handlers
@@ -97,9 +99,15 @@ export default function VariantA() {
     function handlePlanClick(planId: 'starter' | 'business' | 'founder') {
         // Pricing click from "Planos" (sends plan_id) and sets plan_hint in URL for the form to read later
         trackEvent('pricing_interest_click', { variant: 'A', plan_id: planId });
+        
         const url = new URL(window.location.href);
         url.searchParams.set('plan_hint', planId);
         window.history.replaceState({}, '', url.toString());
+
+        if (planId === 'starter' || planId === 'business') {
+          setSelectedPlan(planId);
+        }
+
         const el = document.getElementById('beta-signup');
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -399,7 +407,7 @@ export default function VariantA() {
               <h2 id="signup-heading" className="text-xl font-semibold mb-3" style={{ color: 'var(--brand-navy)' }}>
                 Entrar no Beta
               </h2>
-              <BetaSignupForm variant="A" />
+              <BetaSignupForm variant="A" selectedPlan={selectedPlan} />
             </section>
 
             {/* FOOTER */}
