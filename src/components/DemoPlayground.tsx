@@ -3,6 +3,7 @@ import { trackEvent } from '../lib/analytics';
 
 type Props = { className?: string };
 
+/** Demo playground placeholder for Variant B */
 export default function DemoPlayground({ className = ''}: Props) {
     const ref = useRef<HTMLDivElement | null>(null);
     const firedRef = useRef(false);

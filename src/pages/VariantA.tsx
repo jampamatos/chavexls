@@ -12,6 +12,7 @@ import Pricing from '../components/Pricing';
 import SecurityLGPD from '../components/SecurityLGPD';
 import XlsxPreview from '../components/XlsxPreview';
 
+/** Marketing landing page variant A */
 export default function VariantA() {
     const [selectedPlan, setSelectedPlan] = useState<'starter' | 'business' | ''>('');
 
@@ -66,7 +67,7 @@ export default function VariantA() {
           'Suporte técnico',
         ],
         badge: 'Mais Popular',
-        highlightTone: "emerald" as "emerald", // gives the “ring”/bluish edge of the highlight
+        highlightTone: "emerald" as const, // gives the “ring”/bluish edge of the highlight
       },
     ];
 

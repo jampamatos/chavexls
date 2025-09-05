@@ -1,3 +1,4 @@
+/** Simple sample component used for testing Tailwind */
 export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
