@@ -13,16 +13,17 @@ export default function XlsxPreview({ variant }: Props) {
           </p>
         </div>
 
-        {/* Link Amostra XLSX */}
-        <a
-          href="/assets/sample.xlsx"
-          // "download" sugere salvar como arquivo (não é obrigatório, mas ajuda UX)
-          download
-          onClick={() => trackEvent('sample_download', { variant })}
-          className="shrink-0 inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-        >
-          Ver amostra de XLSX
-        </a>
+        {/* XLSX Sample Link - for Variant B only */}
+        {variant === 'B' && (
+          <a
+            href="assets/sample.xlsx"
+            download
+            onClick={() => trackEvent('sample_download', { variant })}
+            className="shrink-0 inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          >
+            Ver amostra de XLSX
+          </a>
+        )}
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">

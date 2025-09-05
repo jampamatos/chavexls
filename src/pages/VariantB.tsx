@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { trackEvent } from "../lib/analytics";
-import { Link } from "react-router-dom";
 
 import Audience from "../components/Audience";
 import Benefits from "../components/Benefits";
 import BetaSignupForm from "../components/BetaSignupForm";
 import DemoPlayground from "../components/DemoPlayground";
 import FAQ from "../components/FAQ";
+import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
 import Pricing from "../components/Pricing";
@@ -141,16 +141,7 @@ export default function VariantB() {
                 </section>
     
                 {/* FOOTER */}
-                <footer className="py-10 text-center text-sm text-muted-foreground">
-                  <div className="max-w-6xl mx-auto px-4">
-                    <div className="flex items-center justify-center gap-4 mb-2">
-                      <Link to="/termos-beta" className="underline">Termos</Link>
-                      <Link to="/privacidade" className="underline">Privacidade</Link>
-                      <a href="mailto:contato@chavexls.com" className="underline">Contato</a>
-                    </div>
-                    <p>© {new Date().getFullYear()} ChaveXLS.</p>
-                  </div>
-                </footer>
+                <Footer variant="B" showDividerTop className="" />
             </main>
         );
 }
