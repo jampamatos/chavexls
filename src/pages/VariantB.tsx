@@ -13,6 +13,7 @@ import Pricing from "../components/Pricing";
 import SecurityLGPD from "../components/SecurityLGPD";
 import XlsxPreview from "../components/XlsxPreview";
 
+/** Marketing landing page variant B */
 export default function VariantB() {
     const [selectedPlan, setSelectedPlan] = useState<"starter" | "business" | "">("");
 
@@ -26,8 +27,9 @@ export default function VariantB() {
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function handleTryDemoClick() {
-        trackEvent('try_demo_click', { variant: 'B' });
+    // Send dedicated event for demo generation CTA and reveal playground
+    function handleDemoGenerateClick() {
+        trackEvent('demo_generate_click', { variant: 'B' });
         scrollTo('demo');
     }
 
@@ -80,7 +82,7 @@ export default function VariantB() {
                   title="Planilha fiscal confiável a partir do seu XML"
                   subtitle={<>Tipagem correta. Totais por NCM/CFOP. LGPD: 'apagar agora' + expiração em 48h. <strong>Teste a amostra agora.</strong></>}
                   primary={{ label: 'Entrar no Beta', onClick: handleBetaClick }}
-                  secondary={{ label: 'Gerar XLSX de exemplo', onClick: handleTryDemoClick }}
+                  secondary={{ label: 'Gerar XLSX de exemplo', onClick: handleDemoGenerateClick }}
                   helperText="Convites do Beta enviados por e-mail."
                   chips={[
                     { label: 'Sem cartão de crédito no Beta.', tone: 'emerald' },

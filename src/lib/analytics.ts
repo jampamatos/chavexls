@@ -1,6 +1,9 @@
-declare global { interface Window { dataLayer?: any[]; gtag?: (...args:any[]) => void } }
+declare global {
+  interface Window { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void }
+}
 
-export function initGA(id: string) {
+/** Initialize GA4 script and configuration */
+export function initGA(id: string): void {
     if (typeof window.gtag === 'function') return; // tag already initialized
     if (!id) {
         if (import.meta.env.PROD) console.warn("[GA4] VITE_GA4_ID missing in production build");
@@ -13,11 +16,12 @@ export function initGA(id: string) {
     document.head.appendChild(s);
 
     window.dataLayer = window.dataLayer || [];
-    window.gtag = (...args:any[]) => window.dataLayer!.push(args);
+    window.gtag = (...args: unknown[]) => window.dataLayer!.push(args);
     window.gtag('js', new Date());
-    window.gtag('config', id, { send_page_view:false, debug_mode: !import.meta.env.PROD });
+    window.gtag('config', id, { send_page_view: false, debug_mode: !import.meta.env.PROD });
 }
 
-export function trackEvent(name: string, params: Record<string, any> = {}) {
-    if (typeof window.gtag === 'function') window.gtag('event', name, params);
+/** Safely send an event to GA4 */
+export function trackEvent(name: string, params: Record<string, unknown> = {}): void {
+  if (typeof window.gtag === 'function') window.gtag('event', name, params);
 }

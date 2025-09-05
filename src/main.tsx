@@ -1,18 +1,20 @@
-import React from "react"
-import ReactDom from "react-dom/client"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { GA_MEASUREMENT_ID } from "./lib/config"
-import { initGA } from "./lib/analytics"
+/** Application entry point with routing */
+import React from "react";
+import ReactDom from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GA_MEASUREMENT_ID } from "./lib/config";
+import { initGA } from "./lib/analytics";
 
-import Privacy from "./pages/Privacy"
-import RootRedirect from "./pages/RootRedirect"
-import Terms from "./pages/Terms"
-import VariantA from "./pages/VariantA"
-import VariantB from "./pages/VariantB"
+import Privacy from "./pages/Privacy";
+import RootRedirect from "./pages/RootRedirect";
+import Terms from "./pages/Terms";
+import VariantA from "./pages/VariantA";
+import VariantB from "./pages/VariantB";
 
-import "./index.css"
+import "./index.css";
 
-initGA(GA_MEASUREMENT_ID)
+/** Initialize Google Analytics */
+initGA(GA_MEASUREMENT_ID);
 
 // function Terms() {
 //   return (

@@ -2,12 +2,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackEvent } from '../lib/analytics';
 
+/** Props for the signup form component */
 type Props = { variant: "A" | "B"; selectedPlan?: 'starter' | 'business' | '' };
+/** Possible plan hints passed via query string */
 type PlanHint = 'starter' | 'business' | 'founder' | '';
+/** Plans the user can select */
 type Plan = 'starter' | 'business' | '';
 
-/** Helper: BRL formatting */
-function formatBRL(n: number) {
+/** Format a number as BRL currency */
+function formatBRL(n: number): string {
     try {
         return n.toLocaleString('pt-BR', {
             style: 'currency',
@@ -24,7 +27,7 @@ const PRICE_STARTER = 19.9;
 const PRICE_BUSINESS = 59.9;
 const FOUNDER_DISCOUNT = 0.3; // 30%
 
-/** Beta signup form */
+/** Beta signup form component */
 export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     // Read ?plan_hint= from URL (starter, business, founder)
     const location = useLocation()
@@ -64,30 +67,32 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
       ? { main: PRICE_BUSINESS * (1 - FOUNDER_DISCOUNT), original: PRICE_BUSINESS }
       : { main: PRICE_BUSINESS, original: null as number | null};
 
-    // Netlify x-www-form-urlencoded encoding
-    function encode(data: Record<string, string>) {
+    /** Encode object to x-www-form-urlencoded for Netlify */
+    function encode(data: Record<string, string>): string {
         return Object.keys(data)
             .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(data[k]))
             .join("&")
     }
 
-    // Fire from_start once, on first focus
-    function handleFirstFocus() {
+    /** Track form_start once on first user focus */
+    function handleFirstFocus(): void {
         if(!started) {
             setStarted(true);
             startedAtRef.current = Date.now();
-            trackEvent('from_start', { variant });
+            trackEvent('form_start', { variant });
         }
     }
 
-    function handlePlanChange(next: Plan) {
+    /** Handle plan selection changes and track analytics */
+    function handlePlanChange(next: Plan): void {
         if (next != plan) {
             setPlan(next);
             if (next) trackEvent('plan-select-change', { variant, plan: next });
         }
     }
 
-    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    /** Submit the form and send analytics events */
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
         e.preventDefault()
 
         // Anti-bot: require 3s since first interaction
@@ -128,7 +133,7 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
             });
 
             // GA: DO NOT send the message text, only derived metrics
-            trackEvent('lead_submut', {
+            trackEvent('lead_submit', {
                 variant,
                 profile,
                 volume,
