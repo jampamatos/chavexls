@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackEvent } from '../lib/analytics';
 
@@ -6,6 +6,25 @@ type Props = { variant: "A" | "B"; selectedPlan?: 'starter' | 'business' | '' };
 type PlanHint = 'starter' | 'business' | 'founder' | '';
 type Plan = 'starter' | 'business' | '';
 
+/** Helper: BRL formatting */
+function formatBRL(n: number) {
+    try {
+        return n.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits:2
+        });
+    } catch {
+        return `R$ ${n.toFixed(2)}`;
+    }
+}
+
+/** Pricing constants */
+const PRICE_STARTER = 19.9;
+const PRICE_BUSINESS = 59.9;
+const FOUNDER_DISCOUNT = 0.3; // 30%
+
+/** Beta signup form */
 export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     // Read ?plan_hint= from URL (starter, business, founder)
     const location = useLocation()
@@ -17,20 +36,33 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     // Selected plan visible to the user. If plan_hint is starter or business, preselect it.
     const [plan, setPlan] = useState<Plan>('');
     useEffect(() => {
-        if (planHint === 'starter' || planHint === 'business') {
-            setPlan(planHint);
-        }
+        if (planHint === 'starter' || planHint === 'business') setPlan(planHint);
     }, [planHint]);
 
     // If selectedPlan prop changes (from URL param in VariantA), update plan state    
     useEffect(() => {
-        if (selectedPlan === 'starter' || selectedPlan === 'business') {
-            setPlan(selectedPlan);
-        }
+        if (selectedPlan === 'starter' || selectedPlan === 'business') setPlan(selectedPlan);
     }, [selectedPlan]);
 
     const [submitted, setSubmitted] = useState(false)
-    const [started, setStarted] = useState(false);  // first interaction flag
+    
+    // Track first real interaction (for anti-bot delay)
+    const [started, setStarted] = useState(false);
+    const startedAtRef = useRef<number | null>(null);
+
+    // Optional message
+    const [message, setMessage] = useState('');
+    const messageLen = message.length;
+    const hasPhone = /\d{8,13}/.test(message.replace(/\D/g, '')); // 8–13 digits
+
+    // Founder pricing is shown only for Variant A
+    const founderMode = variant === 'A';
+    const starterDisplay = founderMode
+      ? { main: PRICE_STARTER * (1 - FOUNDER_DISCOUNT), original: PRICE_STARTER }
+      : { main: PRICE_STARTER, original: null as number | null};
+    const businessDisplay = founderMode
+      ? { main: PRICE_BUSINESS * (1 - FOUNDER_DISCOUNT), original: PRICE_BUSINESS }
+      : { main: PRICE_BUSINESS, original: null as number | null};
 
     // Netlify x-www-form-urlencoded encoding
     function encode(data: Record<string, string>) {
@@ -43,6 +75,7 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     function handleFirstFocus() {
         if(!started) {
             setStarted(true);
+            startedAtRef.current = Date.now();
             trackEvent('from_start', { variant });
         }
     }
@@ -56,14 +89,24 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+
+        // Anti-bot: require 3s since first interaction
+        const now = Date.now()
+        if (startedAtRef.current && now - startedAtRef.current < 3000) {
+            alert('Por favor, revise e envie novamente em alguns segundos.');
+            return;
+        }
+
         const form = e.currentTarget
         const formData = new FormData(form)
 
         const profile = String(formData.get('profile') || '');
         const volume = String(formData.get('monthlyVolume') || '');
         const accepted = formData.get('acceptedBetaTerms') ? 'yes' : 'no';
-        const selectedPlan = String(formData.get('plan') || plan || '');
+        const selectedPlanValue = String(formData.get('plan') || '');
+        const messageValue = String(formData.get('message') || '');
 
+        // Build Netlify payload
         const payload: Record<string, string> = {
             "form-name": "beta-signup",
             name: String(formData.get("name") || ""),
@@ -72,9 +115,10 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
             monthlyVolume: volume,
             acceptedBetaTerms: accepted,
             variant,
-            plan: selectedPlan,
+            plan: selectedPlanValue,
             plan_hint: planHint,
-        }
+            message: messageValue,
+        };
 
         try {
             await fetch("/", {
@@ -83,12 +127,28 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
                 body: encode(payload),
             });
 
-            // GA: lead_submit + beta_signup (conversion)
-            trackEvent("lead_submit", { variant, profile, volume, plan_hint: planHint });
-            trackEvent("beta_signup", { variant, profile, volume, plan_hint: planHint });
+            // GA: DO NOT send the message text, only derived metrics
+            trackEvent('lead_submut', {
+                variant,
+                profile,
+                volume,
+                plan_hint: planHint,
+                message_len: Math.min(messageLen, 500), // max 500 chars
+                has_phone: hasPhone,
+            }); 
+            // Mark conversion
+            trackEvent('beta_signup', {
+                variant,
+                profile,
+                volume,
+                plan_hint: planHint,
+                message_len: Math.min(messageLen, 500), // max 500 chars
+                has_phone: hasPhone,
+            });
 
             setSubmitted(true)
             form.reset()
+            setMessage('');
         } catch {
             alert("Falha no envio. Por favor, tente novamente.")
         }
@@ -97,7 +157,8 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     if (submitted) {
         return (
             <p className="mt-4 text-sm" role="status" aria-live="polite">
-                Obrigado! Enviaremos seu convite do Beta por e-mail. Você também garantiu o <strong> preço fundador (-30% por 12 meses)</strong>.
+                Obrigado! Enviaremos seu convite do Beta por e-mail. Você também garantiu o{' '}
+                <strong>preço fundador (-30% por 12 meses)</strong>.
             </p>
         );
     }
@@ -151,8 +212,16 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
                                 <div className="text-xs text-muted-foreground">até 100 XML/mês</div>
                             </div>
                             <div className="text-right">
-                                <div className="text-base font-bold">R$ 19,90</div>
-                                <div className="text-[10px] text-muted-foreground">/ mês</div>
+                                <div className={`text-base font-bold ${founderMode ? 'text-emerald-700' : ''}`}>
+                                    {formatBRL(Number((starterDisplay.main).toFixed(2)))}
+                                </div>
+                                {founderMode ? (
+                                    <div className="text-[10px text-muted-foreground line-through">
+                                        {formatBRL(PRICE_STARTER)}
+                                    </div>
+                                ) : (
+                                    <div className="text-[10px] text-muted-foreground">/ mês</div>
+                                )}
                             </div>
                         </div>
                     </label>
@@ -177,8 +246,16 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
                             <div className="text-xs text-muted-foreground">até 1.000 XML/mês</div>
                         </div>
                         <div className="text-right">
-                            <div className="text-base font-bold">R$ 59,90</div>
-                            <div className="text-[10px] text-muted-foreground">/ mês</div>
+                            <div className={`text-base font-bold ${founderMode ? 'text-emerald-700' : ''}`}>
+                                {formatBRL(Number((businessDisplay.main).toFixed(2)))}
+                            </div>
+                            {founderMode ? (
+                                <div className="text-[10px text-muted-foreground line-through">
+                                    {formatBRL(PRICE_BUSINESS)}
+                                </div>
+                            ) : (
+                                <div className="text-[10px] text-muted-foreground">/ mês</div>
+                            )}
                         </div>
                       </div>
                     </label>
@@ -217,6 +294,26 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
                     <option value="1000">Até 1.000</option>
                     <option value="5000">Mais de 1.000</option>
                 </select>
+            </div>
+
+            <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-1">
+                    Mensagem (opcional)
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={3}
+                  maxLength={500}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Escreva dúvidas, sugestões ou deixe um telefone/WhatsApp para contato."
+                  className="w-full border rounded px-3 py-2"
+                 />
+                 <div className="mt-1 flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">Não compartilhe dados sensíveis (senhas, chaves, etc.).</p>
+                    <span className="text-xs text-muted-foreground">{message.length}/500</span>
+                 </div>
             </div>
 
             <label className="inline-flex items-center gap-2">
