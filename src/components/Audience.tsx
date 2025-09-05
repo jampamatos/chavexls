@@ -70,8 +70,15 @@ const DEFAULT_ITEMS: AudienceItem[] = [
     },
 ];
 
-function colorClasses(c: AudienceItem['color']) {
-    return `bg-${c}-100 text-${c}-700`
+type Tone = 'red' | 'blue' | 'indigo' | 'emerald';
+function colorClasses(tone: Tone = 'indigo') {
+  switch (tone) {
+    case 'red':     return 'bg-red-100 text-red-700';
+    case 'blue':    return 'bg-blue-100 text-blue-700';
+    case 'emerald': return 'bg-emerald-100 text-emerald-700';
+    case 'indigo':
+    default:        return 'bg-indigo-100 text-indigo-700';
+  }
 }
 
 /** Reusable "Para quem é?" section */
@@ -107,7 +114,7 @@ export default function Audience({
                       onClick={() => onCardClick?.(title)}
                       className="text-left rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
                     >
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${colorClasses(color)}`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${colorClasses(color as Tone)}`}>
                             <Icon className="w-6 h-6" />
                         </div>
                         <h3 className="font-semibold">{title}</h3>
