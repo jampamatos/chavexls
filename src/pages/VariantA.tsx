@@ -86,10 +86,6 @@ export default function VariantA() {
                 { label: 'Deduplicação por chave', tone: 'blue' },
                 { label: 'LGPD: “apagar agora” + 48h', tone: 'amber' },
               ]}
-              sampleLink={{
-                href: '/assets/sample.xlsx',
-                onClick: () => trackEvent('sample_download', { variant: 'A' }),
-              }}
               className="max-w-6xl mx-auto px-4 py-14"
             />
 
@@ -126,7 +122,7 @@ export default function VariantA() {
             
 
             {/* FAQ */}
-            <FAQ className="max-w-6xl mx-auto px-4 py-12" />
+            <FAQ className="max-w-6xl mx-auto px-4 py-12" variant="A" />
 
             {/* SIGNUP SECTION */}
             <section id="beta-signup" className="max-w-6xl mx-auto px-4 py-10" aria-labelledby="signup-heading">

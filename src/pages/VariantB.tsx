@@ -77,12 +77,13 @@ export default function VariantB() {
                 {/* HERO */}
                 <Hero
                   overline="ChaveXLS"
-                  title="XML de NF-e → Planilha fiscal pronta (XLSX/CSV) em minutos"
-                  subtitle={<>Upload → Pagamento → Download. Itens, CFOP/NCM/CST, totais e canceladas marcadas.</>}
+                  title="Planilha fiscal confiável a partir do seu XML"
+                  subtitle={<>Tipagem correta. Totais por NCM/CFOP. LGPD: 'apagar agora' + expiração em 48h. <strong>Teste a amostra agora.</strong></>}
                   primary={{ label: 'Entrar no Beta', onClick: handleBetaClick }}
-                  secondary={{ label: 'Testar agora (1 conversão)', onClick: handleTryDemoClick }}
-                  helperText="em cartão de crédito no Beta."
+                  secondary={{ label: 'Gerar XLSX de exemplo', onClick: handleTryDemoClick }}
+                  helperText="Convites do Beta enviados por e-mail."
                   chips={[
+                    { label: 'Sem cartão de crédito no Beta.', tone: 'emerald' },
                     { label: 'Deduplicação por chave', tone: 'blue' },
                     { label: 'LGPD: “apagar agora” + 48h', tone: 'amber' },
                   ]}
@@ -129,7 +130,7 @@ export default function VariantB() {
                 
     
                 {/* FAQ */}
-                <FAQ className="max-w-6xl mx-auto px-4 py-12" />
+                <FAQ className="max-w-6xl mx-auto px-4 py-12" variant="B" />
     
                 {/* SIGNUP SECTION */}
                 <section id="beta-signup" className="max-w-6xl mx-auto px-4 py-10" aria-labelledby="signup-heading">

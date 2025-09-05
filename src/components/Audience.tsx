@@ -58,7 +58,7 @@ const DEFAULT_ITEMS: AudienceItem[] = [
     },
     {
       title: 'PMEs / MEIs',
-      text: 'Baixe os XMLs do portal e gere planilhas organizadas sem complicação. Sem cadastro obrigatório no Beta.',
+      text: 'Baixe os XMLs do portal e gere planilhas organizadas sem complicação. Planilhas prontas em minutos',
       color: 'blue',
       Icon: StoreIcon,
     },

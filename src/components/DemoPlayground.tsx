@@ -30,16 +30,17 @@ export default function DemoPlayground({ className = ''}: Props) {
     return (
         <section id="demo" ref={ref} className={className} aria-labelledby="demo-heading">
             <h2 id="demo-heading" className="text-3xl font-bold text-center mb-2" style={{ color: 'var(--brand-navy' }}>
-                Teste agora (1 conversão gratuita)
+                Demo offline (sem enviar arquivos)
             </h2>
             <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-8">
-                Área de sandbox para enviar 1 ZIP e baixar o XLSX pronto (em breve).
+                Gere um XLSX de exemplo localmente, em ~3s. Não enviamos seus dados.<br />
+                Área de sandbox para enviar 1 ZIP e baixar o XLSX pronto <strong>será implementada em breve</strong>.
             </p>
 
             <div className="rounded-2xl border bg-white p-6 shadow-sm max-w-3xl mx-auto">
                 <div className="rounded-xl border-2 border-dashed p-10 text-center">
                     <p className="font-medium mb-1">Arraste aqui o ZIP (55/65)</p>
-                    <p className="text-sm text-muted-foreground">Placeholder — upload real será conectado depois.</p>
+                    <p className="text-sm text-red-600"><strong>Placeholder — upload real será conectado depois.</strong></p>
                     <button
                       type="button"
                       disabled
