@@ -1,7 +1,22 @@
 /** Privacy policy page */
 export default function Privacy() {
+  function goBack() {
+        if(window.history.length > 1) window.history.back();
+        else window.location.href = '/a'; // Fallback to main page
+    }
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-12">
+      <div className="mb-6">
+          <button
+            type="button"
+            onClick={goBack}
+            className="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-muted"
+          >
+            Voltar
+          </button>
+      </div>
+
       <h1 className="text-3xl font-bold mb-4" style={{ color: 'var(--brand-navy)' }}>
         Política de Privacidade — ChaveXLS
       </h1>

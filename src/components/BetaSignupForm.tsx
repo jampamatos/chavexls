@@ -323,7 +323,13 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
 
             <label className="inline-flex items-center gap-2">
                 <input name="acceptedBetaTerms" type="checkbox" required />
-                <span>Concordo com os <a href="/terms" className="underline">Termos do Beta</a>.</span>
+                <span>
+                  Concordo com os{' '}
+                  <a href="/terms" target="_blank" rel="noopener" className="underline">Termos do Beta</a>
+                  {' '}e{' '}
+                  <a href="/privacy" target="_blank" rel="noopener" className="underline">Política de Privacidade</a>.
+                </span>
+                
             </label>
 
             <button type="submit" className="w-full bg-primary text-primary-foreground py-2 rounded-xl">

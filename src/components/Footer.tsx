@@ -47,10 +47,17 @@ export default function Footer({
         <nav className="flex items-center justify-center gap-4 mb-2" aria-label="Rodapé">
           {links.map((l) => {
             const isInternal = !l.external && l.href.startsWith('/');
+            const isLegal = l.href === '/terms' || l.href === '/privacy';
+            // For legal links, open in new tab if external (to avoid losing context)
+            const target = isLegal ? '_blank' as const : undefined;
+            const rel = isLegal ? 'noopener' : undefined;
+            
             return isInternal ? (
               <Link
                 key={l.href}
                 to={l.href}
+                target ={target}
+                rel={rel}
                 onClick={() => handleClick(l)}
                 className="underline underline-offset-2 hover:opacity-80"
               >
@@ -60,9 +67,10 @@ export default function Footer({
               <a
                 key={l.href}
                 href={l.href}
+                target={l.external ? '_blank' : undefined}
+                rel={l.external ? 'noopener' : undefined}
                 onClick={() => handleClick(l)}
                 className="underline underline-offset-2 hover:opacity-80"
-                rel="noopener noreferrer"
               >
                 {l.label}
               </a>
