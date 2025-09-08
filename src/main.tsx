@@ -8,6 +8,7 @@ import { initGA } from "./lib/analytics";
 import Privacy from "./pages/Privacy";
 import RootRedirect from "./pages/RootRedirect";
 import Terms from "./pages/Terms";
+import Subprocessors from "./pages/Subprocessors";
 import VariantA from "./pages/VariantA";
 import VariantB from "./pages/VariantB";
 
@@ -34,6 +35,7 @@ ReactDom.createRoot(document.getElementById("root")!).render(
         <Route path="/b" element={<VariantB /> } />
         <Route path="/terms" element={<Terms /> } />
         <Route path="/privacy" element={<Privacy /> } />
+        <Route path="/subprocessors" element={<Subprocessors /> } />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
