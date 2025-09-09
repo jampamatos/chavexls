@@ -1,21 +1,12 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { captureUtms } from "../lib/utm";
 
 // Lazy-load to avoid shipping both variants at once
 const VariantA = React.lazy(() => import("./VariantA"));
 const VariantB = React.lazy(() => import("./VariantB"));
 
 const VAR_KEY = "chavexls_variant";
-const UTM_KEY = "chavexls_utm";
-const UTM_KEYS = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_term",
-  "utm_content",
-  "gclid",
-  "fbclid",
-];
 
 function resolveVariant(search: string): "A" | "B" {
   const params = new URLSearchParams(search || "");
@@ -44,20 +35,7 @@ function resolveVariant(search: string): "A" | "B" {
   return random;
 }
 
-function captureUtms(search: string) {
-  const params = new URLSearchParams(search || "");
-  const utm: Record<string, string> = {};
-  for (const key of UTM_KEYS) {
-    const val = params.get(key);
-    if (val) utm[key] = val;
-  }
-  if (Object.keys(utm).length > 0) {
-    utm.ts = String(Date.now());
-    try {
-      localStorage.setItem(UTM_KEY, JSON.stringify(utm));
-    } catch {}
-  }
-}
+// moved to lib/utm.ts
 
 export default function RootRedirect(): React.ReactElement {
   const location = useLocation();

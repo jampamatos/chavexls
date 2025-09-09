@@ -5,12 +5,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GA_MEASUREMENT_ID } from "./lib/config";
 import { initGA } from "./lib/analytics";
 
-import Privacy from "./pages/Privacy";
-import RootRedirect from "./pages/RootRedirect";
-import Terms from "./pages/Terms";
-import Subprocessors from "./pages/Subprocessors";
-import VariantA from "./pages/VariantA";
-import VariantB from "./pages/VariantB";
+// Lazy-load route components to keep initial bundle small
+const RootRedirect = React.lazy(() => import('./pages/RootRedirect'));
+const VariantA = React.lazy(() => import('./pages/VariantA'));
+const VariantB = React.lazy(() => import('./pages/VariantB'));
+const Terms = React.lazy(() => import('./pages/Terms'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
+const Subprocessors = React.lazy(() => import('./pages/Subprocessors'));
 
 import "./index.css";
 
@@ -29,14 +30,16 @@ initGA(GA_MEASUREMENT_ID);
 ReactDom.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<RootRedirect /> } />
-        <Route path="/a" element={<VariantA /> } />
-        <Route path="/b" element={<VariantB /> } />
-        <Route path="/terms" element={<Terms /> } />
-        <Route path="/privacy" element={<Privacy /> } />
-        <Route path="/subprocessors" element={<Subprocessors /> } />
-      </Routes>
+      <React.Suspense fallback={<main className="min-h-screen" aria-busy="true" aria-live="polite" /> }>
+        <Routes>
+          <Route path="/" element={<RootRedirect /> } />
+          <Route path="/a" element={<VariantA /> } />
+          <Route path="/b" element={<VariantB /> } />
+          <Route path="/terms" element={<Terms /> } />
+          <Route path="/privacy" element={<Privacy /> } />
+          <Route path="/subprocessors" element={<Subprocessors /> } />
+        </Routes>
+      </React.Suspense>
     </BrowserRouter>
   </React.StrictMode>
 )

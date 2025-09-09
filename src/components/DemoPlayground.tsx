@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { trackEvent } from '../lib/analytics';
+import { track } from '../lib/analytics';
 
 type Props = { className?: string };
 
@@ -17,7 +17,7 @@ export default function DemoPlayground({ className = ''}: Props) {
                 entries.forEach((e) => {
                     if (e.isIntersecting && !firedRef.current) {
                         firedRef.current = true;
-                        trackEvent('demo_view', { variant: 'B' });
+                        track('demo_view', { variant: 'B' });
                     }
                 });
             },

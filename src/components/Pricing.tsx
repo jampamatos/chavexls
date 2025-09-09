@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { formatBRL } from '../lib/utils';
 
 type PlanId = 'starter' | 'business';
 
@@ -55,13 +56,7 @@ function badgeTone(tone: Plan['highlightTone']) {
   }
 }
 
-function formatBRL(n: number) {
-  try {
-    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
-  } catch {
-    return `R$ ${n.toFixed(2).replace('.', ',')}`;
-  }
-}
+// currency formatting consolidated in lib/utils
 
 export default function Pricing({
   title = 'Planos',
