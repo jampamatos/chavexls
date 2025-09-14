@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDom from "react-dom/client";
 import CookieConsent from "./components/CookieConsent";
+import ScrollDepthTracker from "./components/ScrollDepthTracker";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GA_MEASUREMENT_ID } from "./lib/config";
 import { initGA } from "./lib/analytics";
@@ -34,6 +35,8 @@ ReactDom.createRoot(document.getElementById("root")!).render(
       </React.Suspense>
       {/* Global cookie banner: appears on all routes, even during lazy route loads */}
       <CookieConsent />
+      {/* Global scroll depth tracker (fires once per route per session at 50%) */}
+      <ScrollDepthTracker />
     </BrowserRouter>
   </React.StrictMode>
 )

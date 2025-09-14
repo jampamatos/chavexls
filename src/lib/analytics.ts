@@ -149,6 +149,7 @@ type UtmParams = Partial<Record<UTMKey, string>>;
 export type AnalyticsEventMap = {
   page_view: { variant: Variant } & UtmParams;
   form_start: { variant: Variant } & UtmParams;
+  scroll_50: { variant: Variant } & UtmParams;
   plan_select_change: { variant: Variant; plan: PlanId } & UtmParams;
   pricing_interest_click: { variant: Variant; plan_id: PlanId | 'founder'; plan_variant?: 'founder' | 'regular' } & UtmParams;
   demo_view: { variant: 'B' } & UtmParams;
