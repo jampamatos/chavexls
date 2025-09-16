@@ -49,12 +49,15 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     submitted,
     message,
     setMessage,
+    planError,
     utms,
     cid,
     handleFirstFocus,
     handlePlanChange,
     onSubmit,
   } = useBetaSignupForm({ variant, planHint, selectedPlanProp: selectedPlan });
+
+  const planErrorId = planError ? `plan-error-${cid.replace(/[^a-zA-Z0-9_-]/g, '-')}` : undefined;
 
   // Founder pricing is shown only for Variant A
   const founderMode = variant === 'A';
@@ -110,7 +113,10 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
       </p>
 
       {/* Visible selected preferred plan */}
-      <fieldset className="border rounded-2xl p-3">
+      <fieldset
+        className={`border rounded-2xl p-3 ${planError ? 'border-red-500' : ''}`}
+        aria-describedby={planErrorId}
+      >
         <legend className="px-1 text-sm font-medium">Plano preferido</legend>
 
         {/* Founder badge if came from founder CTA */}
@@ -134,6 +140,8 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
               checked={plan === 'starter'}
               onChange={() => handlePlanChange('starter')}
               className="sr-only"
+              aria-invalid={planError ? true : undefined}
+              aria-describedby={planErrorId}
             />
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -168,6 +176,8 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
               checked={plan === 'business'}
               onChange={() => handlePlanChange('business')}
               className="sr-only"
+              aria-invalid={planError ? true : undefined}
+              aria-describedby={planErrorId}
             />
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -190,6 +200,11 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
           </label>
         </div>
       </fieldset>
+      {planError ? (
+        <p id={planErrorId} className="mt-1 text-sm text-red-600">
+          {planError}
+        </p>
+      ) : null}
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1">Nome (opcional)</label>

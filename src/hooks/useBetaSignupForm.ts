@@ -19,6 +19,7 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
   const [started, setStarted] = useState(false);
   const startedAtRef = useRef<number | null>(null);
   const [message, setMessage] = useState('');
+  const [planError, setPlanError] = useState('');
 
   // derived
   const messageLen = message.length;
@@ -26,10 +27,16 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
 
   // Preselect from hint or external prop
   useEffect(() => {
-    if (planHint === 'starter' || planHint === 'business') setPlan(planHint);
+    if (planHint === 'starter' || planHint === 'business') {
+      setPlan(planHint);
+      setPlanError('');
+    }
   }, [planHint]);
   useEffect(() => {
-    if (selectedPlanProp === 'starter' || selectedPlanProp === 'business') setPlan(selectedPlanProp);
+    if (selectedPlanProp === 'starter' || selectedPlanProp === 'business') {
+      setPlan(selectedPlanProp);
+      setPlanError('');
+    }
   }, [selectedPlanProp]);
 
   const utms = useMemo(() => readStoredUtms(), []);
@@ -48,6 +55,7 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
       setPlan(next);
       track('plan_select_change', { variant, plan: next });
     }
+    if (next) setPlanError('');
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -68,6 +76,11 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
     const accepted = formData.get('acceptedBetaTerms') ? 'yes' : 'no';
     const selectedPlanValue = String(formData.get('plan') || '');
     const messageValue = String(formData.get('message') || '');
+
+    if (!selectedPlanValue) {
+      setPlanError('Selecione um plano para continuar.');
+      return;
+    }
 
     const payload: Record<string, string> = {
       'form-name': 'beta-signup',
@@ -134,6 +147,7 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
     setMessage,
     messageLen,
     hasPhone,
+    planError,
     // derived tracking data
     utms,
     cid,
@@ -143,4 +157,3 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
     onSubmit,
   };
 }
-
