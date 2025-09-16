@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { trackEvent } from '../lib/analytics';
+import { track } from '../lib/analytics';
 
 import Audience from '../components/Audience';
 import Benefits from '../components/Benefits';
@@ -18,7 +18,7 @@ export default function VariantA() {
 
     // CTA Handlers
     function handleBetaClick() {
-        trackEvent('form_start', { variant: 'A' });
+        track('form_start', { variant: 'A' });
         const el = document.getElementById('beta-signup');
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -27,7 +27,7 @@ export default function VariantA() {
       planId: 'starter' | 'business' | 'founder',
       planVariant?: 'founder' | 'regular'
     ) {
-      trackEvent('pricing_interest_click', {
+      track('pricing_interest_click', {
         variant: 'A',
         plan_id: planId,
         // sends 'founder' when coming from the pricing section of this variant

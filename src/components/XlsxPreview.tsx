@@ -1,4 +1,4 @@
-import { trackEvent } from '../lib/analytics';
+import { track } from '../lib/analytics';
 
 type Props = { variant: 'A' | 'B' };
 
@@ -18,7 +18,7 @@ export default function XlsxPreview({ variant }: Props) {
           <a
             href="assets/sample.xlsx"
             download
-            onClick={() => trackEvent('sample_download', { variant })}
+            onClick={() => track('sample_download', { variant })}
             className="shrink-0 inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
           >
             Ver amostra de XLSX

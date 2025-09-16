@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { trackEvent } from '../lib/analytics';
+import { track } from '../lib/analytics';
 
 type FooterLink = {
   label: string;
@@ -31,7 +31,7 @@ export default function Footer({
 
   function handleClick(l: FooterLink) {
     // Simple and consistent tracking (without sending sensitive data)
-    trackEvent('footer_link_click', { variant, label: l.label, href: l.href });
+    track('footer_link_click', { variant, label: l.label, href: l.href });
   }
 
   return (

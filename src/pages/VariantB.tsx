@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { trackEvent } from "../lib/analytics";
+import { track } from "../lib/analytics";
 
 import Audience from "../components/Audience";
 import Benefits from "../components/Benefits";
@@ -19,7 +19,7 @@ export default function VariantB() {
 
     useEffect(() => {
         // Variant B's demo_view also fires when the playground enters viewport (in the component)
-        trackEvent('page_view', { variant: 'B' });
+        track('page_view', { variant: 'B' });
     }, []);
 
     function scrollTo(id: string) {
@@ -29,17 +29,17 @@ export default function VariantB() {
 
     // Send dedicated event for demo generation CTA and reveal playground
     function handleDemoGenerateClick() {
-        trackEvent('demo_generate_click', { variant: 'B' });
+        track('demo_generate_click', { variant: 'B' });
         scrollTo('demo');
     }
 
     function handleBetaClick() {
-        trackEvent('form_start', { variant: 'B' });
+        track('form_start', { variant: 'B' });
         scrollTo('beta-signup');
     }
 
     function handlePlanClick(planId: 'starter' | 'business') {
-        trackEvent('pricing_interest_click', { variant: 'B', plan_id: planId, plan_variant: 'regular' });
+        track('pricing_interest_click', { variant: 'B', plan_id: planId, plan_variant: 'regular' });
 
         const url = new URL(window.location.href);
         url.searchParams.set('plan_hint', planId);
@@ -91,7 +91,7 @@ export default function VariantB() {
                   ]}
                   sampleLink={{
                     href: '/assets/sample.xlsx',
-                    onClick: () => trackEvent('sample_download', { variant: 'B' }),
+                    onClick: () => track('sample_download', { variant: 'B' }),
                   }}
                   className="max-w-6xl mx-auto px-4 py-14"
                 />
