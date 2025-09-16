@@ -41,5 +41,30 @@
     </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Shadow form for Netlify Forms detection (hidden at build time) -->
+     <form name="beta-signup" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="text" name="email" />
+      <input type="text" name="profile" />
+      <input type="text" name="monthlyVolume" />
+      <input type="text" name="message" />
+      <input type="text" name="plan" />
+      <input type="text" name="plan_hint" />
+      <input type="text" name="variant" />
+      <input type="text" name="cid" />
+      <input type="text" name="lead_id" />
+      <input type="text" name="user_agent" />
+      <input type="text" name="utm_source" />
+      <input type="text" name="utm_medium" />
+      <input type="text" name="utm_campaign" />
+      <input type="text" name="utm_term" />
+      <input type="text" name="utm_content" />
+      <input type="text" name="gclid" />
+      <input type="text" name="fbclid" />
+      <input type="text" name="ts" />
+      <input type="text" name="acceptedBetaTerms" />
+      <p hidden><label>Não preencher: <input name="bot-field" /></label></p>
+     </form>
   </body>
 </html>
