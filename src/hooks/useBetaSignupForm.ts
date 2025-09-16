@@ -83,6 +83,13 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
       cid,
     };
 
+    // Include hidden fields coming from the form (CRM/webhook)
+    const leadId = String(formData.get('lead_id') || '');
+    const userAgent = String(formData.get('user_agent') || '');
+    if (leadId) payload.lead_id = leadId;
+    if (userAgent) payload.user_agent = userAgent;
+
+    // Append UTMs (if not already present in payload)
     for (const k of UTM_KEYS) {
       const v = (utms as any)[k];
       if (v) payload[k] = String(v);

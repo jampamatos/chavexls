@@ -15,6 +15,28 @@ const FOUNDER_DISCOUNT = DEFAULT_FOUNDER_DISCOUNT; // 30%
 
 /** Beta signup form component */
 export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
+  // Stable lead id within the tab/session (used by webhook/CRM)
+  const LEAD_ID_KEY = 'chavexls_lead_id';
+  const leadId = useMemo(() => {
+    try {
+      const existing = sessionStorage.getItem(LEAD_ID_KEY);
+      if (existing) return existing;
+      const id = `lead_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      sessionStorage.setItem(LEAD_ID_KEY, id);
+      return id;
+    } catch {
+      // fallback if sessionStorage is unavailable
+      return `lead_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    }
+  }, []);
+  // Best-effort user agent (useful for support; not PII-sensitive by design)
+  const userAgent = useMemo(() => {
+    try {
+      return navigator.userAgent || '';
+    } catch {
+      return '';
+    }
+  }, []);
   // Read ?plan_hint= from URL (starter, business, founder)
   const location = useLocation();
   const planHint: PlanHint = useMemo(() => {
@@ -73,6 +95,9 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
       <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="plan_hint" value={planHint} />
       <input type="hidden" name="cid" value={cid} />
+      {/* Hidden fields for webhook/CRM */}
+      <input type="hidden" name="lead_id" value={leadId} />
+      <input type="hidden" name="user_agent" value={userAgent} />
       {/* UTM hidden fields (only rendered if present) */}
       {Object.keys(utms).map((k) =>
         (utms as any)[k] ? <input key={k} type="hidden" name={k} value={(utms as any)[k]} /> : null
