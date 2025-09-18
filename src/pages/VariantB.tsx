@@ -79,20 +79,17 @@ export default function VariantB() {
                 {/* HERO */}
                 <Hero
                   overline="ChaveXLS"
-                  title="Planilha fiscal confiável a partir do seu XML"
-                  subtitle={<>Tipagem correta. Totais por NCM/CFOP. LGPD: 'apagar agora' + expiração em 48h. <strong>Teste a amostra agora.</strong></>}
+                  title="Planilha fiscal pronta, com validações, a partir do seu XML."
+                  subtitle={<>Teste agora: gere uma amostra de XLSX em ~3s e veja abas tipadas, totais por NCM/CFOP e deduplicação por chave.
+                  Seus dados seguem a LGPD (retenção 48h + “Apagar agora”).</>}
                   primary={{ label: 'Entrar no Beta', onClick: handleBetaClick }}
                   secondary={{ label: 'Gerar XLSX de exemplo', onClick: handleDemoGenerateClick }}
                   helperText="Convites do Beta enviados por e-mail."
                   chips={[
                     { label: 'Sem cartão de crédito no Beta.', tone: 'emerald' },
-                    { label: 'Deduplicação por chave', tone: 'blue' },
+                    { label: 'Validações fiscais', tone: 'blue' },
                     { label: 'LGPD: “apagar agora” + 48h', tone: 'amber' },
                   ]}
-                  sampleLink={{
-                    href: '/assets/sample.xlsx',
-                    onClick: () => track('sample_download', { variant: 'B' }),
-                  }}
                   className="max-w-6xl mx-auto px-4 py-14"
                 />
     
@@ -110,7 +107,7 @@ export default function VariantB() {
                 </div>
     
                 {/* DEMO PREVIEW */}
-                <XlsxPreview variant="B"/>
+                <XlsxPreview />
 
                 {/* DEMO PLAYGROUND */}
                 <DemoPlayground className="max-w-6xl mx-auto px-4 py-12" />

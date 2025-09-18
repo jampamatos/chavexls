@@ -38,8 +38,6 @@ type HeroProps = {
   chips?: HeroChip[];                // trust chips row
   primary: { label: string; onClick: () => void; ariaDescribedBy?: string };
   secondary?: { label: string; onClick: () => void; ariaDescribedBy?: string };
-  /** Optional secondary link near CTAs (e.g., “Ver amostra de XLSX”) */
-  sampleLink?: { href: string; label?: string; onClick?: () => void } | null;
   /** Extra classes to control max width/spacing from the page */
   className?: string;
 };
@@ -52,7 +50,6 @@ export default function Hero({
   chips = [],
   primary,
   secondary,
-  sampleLink = null,
   className = '',
 }: HeroProps) {
   const sectionId = 'hero-heading';
@@ -73,18 +70,51 @@ export default function Hero({
       />
 
       <div className={`relative text-center ${className}`}>
-        {overline ? (
-          <p className="tracking-wide text-sm font-semibold mb-2" style={{ color: 'var(--brand-navy)' }}>
-            {overline}
-          </p>
-        ) : null}
-
-        <h1 id={sectionId} className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: 'var(--brand-navy)' }}>
-          {title}
-        </h1>
-
+        {/* Brand overline: icon + small brand text */}
+        <div className="mx-auto mb-2">
+          {overline ? (
+          <div className="mx-auto mb-6 flex items-center justify-center gap-3 text-[var(--brand-navy)]">
+            <img
+              src="/assets/models/icon-chavexls.svg"
+              alt=""                 // decorative; text at the side communicates the brand
+              aria-hidden="true"
+              className="h-12 w-12 md:h-[52px] md:w-[52px] lg:h-14 lg:w-14"
+              width={96}
+              height={96}
+              decoding="async"
+              loading="eager"
+            />
+            <span className="font-semibold tracking-tight text-[1rem] md:text-[1.125rem] lg:text-[1.25rem]">
+              {overline}
+            </span>
+          </div>
+        ) : (
+          // Fallback: if no overline, keep the icon alone centered above the title
+          <div className="mx-auto mb-5">
+            <img
+              src="/assets/models/icon-chavexls.svg"
+              alt=""
+              aria-hidden="true"
+              className="mx-auto h-14 md:h-16 lg:h-20 w-auto"
+              width={96}
+              height={96}
+              decoding="async"
+              loading="eager"
+            />
+          </div>
+        )}
+        </div>
+        <div className="mx-auto max-w-[1000px]">
+          <h1 
+            id={sectionId} 
+            className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight leading-[1.05]" 
+            style={{ color: 'var(--brand-navy)', textWrap: 'balance' }} // Prevent text overflow
+          >
+            {title}
+          </h1>
+        </div>
         {subtitle ? (
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="mt-3 md:mt-4 text-lg text-muted-foreground max-w-[820px] mx-auto">
             {subtitle}
           </p>
         ) : null}
@@ -95,7 +125,7 @@ export default function Hero({
             type="button"
             onClick={primary.onClick}
             aria-describedby={primary.ariaDescribedBy}
-            className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium shadow-sm bg-[var(--brand-navy)] text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium bg-[var(--brand-navy)] text-white shadow-md hover:opacity-95 transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
           >
             {primary.label}
           </button>
@@ -105,20 +135,10 @@ export default function Hero({
               type="button"
               onClick={secondary.onClick}
               aria-describedby={secondary.ariaDescribedBy}
-              className="inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium border border-slate-300 text-[var(--brand-navy)] hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               {secondary.label}
             </button>
-          ) : null}
-
-          {sampleLink ? (
-            <a
-              href={sampleLink.href}
-              onClick={sampleLink.onClick}
-              className="ml-2 underline text-sm text-[var(--brand-navy)]"
-            >
-              {sampleLink.label ?? 'Ver amostra de XLSX'}
-            </a>
           ) : null}
         </div>
 
@@ -128,7 +148,7 @@ export default function Hero({
 
         {/* Trust chips */}
         {chips.length > 0 ? (
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
             {chips.map(({ label, tone = 'blue', Icon = CheckIcon }) => (
               <span
                 key={label}

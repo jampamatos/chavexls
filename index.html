@@ -1,36 +1,67 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <!-- GA4 (build-time; uses %VITE_GA4_ID%) -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>ChaveXLS - Conversor NF-e para Planilha Fiscal</title>
+    <meta name="description" content="Converta XML de NF-e/NFC-e em planilhas XLSX/CSV com tipagem fiscal correta. Sem cadastro obrigatório, LGPD compliant.">
+    
+    <!-- Brand theming -->
+    <!-- Light -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#2563EB">
+    <!-- Dark -->
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F172A">
+
+    <!-- Open Graph / Twitter (update href/src later when logo/OG are generated) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ChaveXLS - Conversor NF-e para Planilha Fiscal">
+    <meta property="og:description" content="Upload → (Beta gratuito) → Download. XLSX/CSV com Itens, CFOP/NCM/CST, totais e canceladas marcadas.">
+    <meta property="og:image" content="/assets/og-1200x630.png">
+    <meta property="og:url" content="https://chavexls.netlify.app/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ChaveXLS - Conversor NF-e para Planilha Fiscal">
+    <meta name="twitter:description" content="Upload → (Beta gratuito) → Download. XLSX/CSV com Itens, CFOP/NCM/CST, totais e canceladas marcadas.">
+    <meta name="twitter:image" content="/assets/og-1200x630.png">
+
+    <!-- Icons (update files after we export the logo kit) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png">
+
+    <!-- Fonts (Inter / IBM Plex Mono) - matches tokens in index.css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- GA4 (LGPD-first): denied by default; we will grant via consent banner later -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA4_ID%"></script>
     <script>
+      // LGPD baseline: deny everything until explicit opt-in
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
-
       gtag('js', new Date());
 
-      /* LGPD: allow analytics, deny ads by default */
       gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        analytics_storage: 'granted',
+        analytics_storage: 'denied',
       });
 
-      /* No automatic page_view; we send our own events */
+      /* We do NOT send automatic page_view; app code will dispatch events after consent. */
       gtag('config', '%VITE_GA4_ID%', { send_page_view: false, debug_mode: true });
     </script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <meta name="description" content="Converta XML de NF-e/NFC-e em planilhas XLSX/CSV com tipagem fiscal correta. Sem cadastro obrigatório, LGPD compliant.">
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChaveXLS - Conversor NF-e para Planilha Fiscal</title>
   </head>
+
   <body>
+    <noscript>Ative o JavaScript para usar a ChaveXLS.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
