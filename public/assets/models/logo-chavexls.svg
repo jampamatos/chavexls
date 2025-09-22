@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- ChaveXLS — Logo compacto alinhado (v1.3) -->
+
+<svg
+   viewBox="0 0 362 81.398834"
+   role="img"
+   aria-labelledby="logoTitle logoDesc"
+   version="1.1"
+   id="svg118"
+   sodipodi:docname="logo-chavexls.svg"
+   width="362"
+   height="81.398834"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs122" />
+  <sodipodi:namedview
+     id="namedview120"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.1083333"
+     inkscape:cx="236.13941"
+     inkscape:cy="49.383378"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg118" />
+  <title
+     id="logoTitle">ChaveXLS</title>
+  <desc
+     id="logoDesc">Cabeça de chave à esquerda; título acima da haste, tagline abaixo; tudo alinhado e com pouco espaço em branco.</desc>
+  <style
+     id="style81">
+    text{ text-rendering:geometricPrecision }
+  </style>
+  <!-- ===== Cabeça (80x80) alinhada ao bloco de texto (topo do título ~32 / base da tagline ~112) ===== -->
+  <rect
+     x="0"
+     y="0"
+     width="80"
+     height="80"
+     rx="20"
+     fill="#0f172a"
+     id="rect83" />
+  <!-- Grade 3x3 centralizada (cell=16, gap=8 -> 72x72; margem interna = (80-72)/2 = 4) -->
+  <g
+     transform="translate(8.066689,7.717326)"
+     id="g103">
+    <!-- Linha 1 -->
+    <rect
+       x="0"
+       y="0"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#2563eb"
+       id="rect85" />
+    <rect
+       x="24"
+       y="0"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect87" />
+    <rect
+       x="48"
+       y="0"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect89" />
+    <!-- Linha 2 -->
+    <rect
+       x="0"
+       y="24"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect91" />
+    <rect
+       x="24"
+       y="24"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#2563eb"
+       id="rect93" />
+    <rect
+       x="48"
+       y="24"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect95" />
+    <!-- Linha 3 -->
+    <rect
+       x="0"
+       y="48"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect97" />
+    <rect
+       x="24"
+       y="48"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#e5e7eb"
+       id="rect99" />
+    <rect
+       x="48"
+       y="48"
+       width="16"
+       height="16"
+       rx="4"
+       fill="#2563eb"
+       id="rect101" />
+  </g>
+  <!-- ===== Bloco de texto ===== -->
+  <!-- Parâmetros: início do bloco (X_START) e largura do bloco (W_TEXT) -->
+  <!-- X_START=120 (gap menor), W_TEXT=280 (um pouco mais compacto) -->
+  <!-- Centro do texto: 120 + 280/2 = 260 -->
+  <g
+     id="textBlock"
+     transform="matrix(1.0630898,0,0,1.1562979,-68.980406,-47.755013)">
+    <text
+       x="260"
+       y="64"
+       text-anchor="middle"
+       dominant-baseline="middle"
+       font-family="Inter, system-ui, '-apple-system', 'Segoe UI', Roboto, Helvetica, Arial"
+       font-size="40px"
+       font-weight="800"
+       letter-spacing="-0.5"
+       fill="#0f172a"
+       id="text107">Chave<tspan
+   fill="#2563eb"
+   font-weight="700"
+   id="tspan105">XLS</tspan></text>
+    <text
+       x="260"
+       y="104"
+       text-anchor="middle"
+       dominant-baseline="middle"
+       font-family="Inter, system-ui, '-apple-system', 'Segoe UI', Roboto, Helvetica, Arial"
+       font-size="16px"
+       font-weight="600"
+       fill="#0f172a"
+       opacity="0.85"
+       id="text109">Do XML à planilha fiscal pronta</text>
+  </g>
+  <!-- ===== Haste (mesma largura do bloco de texto; um pouco menor que antes) ===== -->
+  <!-- Centro entre 64 e 104 => 84; haste 12px de altura -> y=78 -->
+  <!-- W_TEXT=280 = 252 (haste) + 12 + 4 + 12 (dentes) -->
+  <rect
+     x="82"
+     y="46"
+     width="252"
+     height="12"
+     rx="6"
+     fill="#0f172a"
+     id="rect112" />
+  <rect
+     x="334"
+     y="46"
+     width="12"
+     height="12"
+     fill="#0f172a"
+     id="rect114" />
+  <rect
+     x="350"
+     y="46"
+     width="12"
+     height="12"
+     fill="#0f172a"
+     id="rect116" />
+  <metadata
+     id="metadata330">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>ChaveXLS</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

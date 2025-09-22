@@ -43,8 +43,8 @@ type HowItWorksProps = {
 
 const DEFAULT_STEPS: Step[] = [
     { title: '1. Upload', text: 'Arraste um .zip com seus XML (55/65) ou clique para selecionar.', color: 'red', Icon: UploadIcon },
-    { title: '2. Processamos', text: 'Validações, tipagem fiscal e deduplicação automática por chave.', color: 'indigo', Icon: CreditCardIcon },
-    { title: '3. Baixar XLSX', text: 'Planilha pronta com validações, tipagem correta e dados organizados.', color: 'emerald', Icon: DownloadIcon },
+    { title: '2. Processamos', text: 'Validações, tipagem fiscal (CFOP, NCM, CST, PIS/COFINS) e deduplicação automática por chave.', color: 'indigo', Icon: CreditCardIcon },
+    { title: '3. Baixar XLSX', text: 'Planilha multiabas tipadas, canceladas/denegadas marcadas e totais por NCM/CFOP — tudo pronto para conferência.', color: 'emerald', Icon: DownloadIcon },
 ];
 
 function colorClasses(c: Step['color']) {

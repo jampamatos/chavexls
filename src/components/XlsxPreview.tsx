@@ -1,8 +1,4 @@
-import { track } from '../lib/analytics';
-
-type Props = { variant: 'A' | 'B' };
-
-export default function XlsxPreview({ variant }: Props) {
+export default function XlsxPreview() {
   return (
     <section className="max-w-6xl mx-auto my-10 px-4" aria-labelledby="xlsx-preview-heading">
       <div className="flex items-center justify-between gap-4 mb-3">
@@ -12,18 +8,6 @@ export default function XlsxPreview({ variant }: Props) {
             Exemplo de planilha fiscal pronta (preview de exemplo real).
           </p>
         </div>
-
-        {/* XLSX Sample Link - for Variant B only */}
-        {variant === 'B' && (
-          <a
-            href="assets/sample.xlsx"
-            download
-            onClick={() => track('sample_download', { variant })}
-            className="shrink-0 inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium border border-[var(--brand-navy)] text-[var(--brand-navy)] hover:bg-[var(--brand-navy)]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
-            Ver amostra de XLSX
-          </a>
-        )}
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">

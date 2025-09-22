@@ -7,6 +7,13 @@ export type Variant = 'A' | 'B';
 export type Plan = 'starter' | 'business' | '';
 export type PlanHint = 'starter' | 'business' | 'founder' | '';
 
+// Helpers and flags
+const USE_NETLIFY_FORMS = typeof window !== 'undefined' && import.meta.env.PROD;
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 type Params = {
   variant: Variant;
   planHint: PlanHint;
@@ -18,8 +25,13 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
   const [submitted, setSubmitted] = useState(false);
   const [started, setStarted] = useState(false);
   const startedAtRef = useRef<number | null>(null);
+
   const [message, setMessage] = useState('');
   const [planError, setPlanError] = useState('');
+
+  // New: UI states for request lifecycle
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<'timeout' | 'tooMany' | 'network' | 'unknown' | null>(null);
 
   // derived
   const messageLen = message.length;
@@ -32,6 +44,7 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
       setPlanError('');
     }
   }, [planHint]);
+
   useEffect(() => {
     if (selectedPlanProp === 'starter' || selectedPlanProp === 'business') {
       setPlan(selectedPlanProp);
@@ -58,34 +71,45 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
     if (next) setPlanError('');
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending) return; // prevent double submit
+    
+    setSending(true);
+    setError(null);
 
-    // Anti-bot minimal dwell time
+    const formEl = e.currentTarget;
+    const formData = new FormData(formEl);
+
+    // Anti-bot: minimal dwell time (3s) BEFORE network
     const now = Date.now();
     if (startedAtRef.current && now - startedAtRef.current < 3000) {
+      // Keep minimal notice, but without blocking with persistent error
+      setSending(false);
       alert('Por favor, revise e envie novamente em alguns segundos.');
       return;
     }
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    const profile = String(formData.get('profile') || '');
-    const volume = String(formData.get('monthlyVolume') || '');
-    const accepted = formData.get('acceptedBetaTerms') ? 'yes' : 'no';
+    // Required: plan chosen
     const selectedPlanValue = String(formData.get('plan') || '');
-    const messageValue = String(formData.get('message') || '');
-
     if (!selectedPlanValue) {
       setPlanError('Selecione um plano para continuar.');
+      setSending(false);
       return;
     }
 
+    // Build payload we want to keep (explicit > implicit)
+    const profile = String(formData.get('profile') || '');
+    const volume = String(formData.get('monthlyVolume') || '');
+    const accepted = formData.get('acceptedBetaTerms') ? 'yes' : 'no';
+    const messageValue = String(formData.get('message') || '');
+    const name = String(formData.get('name') || '');
+    const email = String(formData.get('email') || '');
+
     const payload: Record<string, string> = {
       'form-name': 'beta-signup',
-      name: String(formData.get('name') || ''),
-      email: String(formData.get('email') || ''),
+      name,
+      email,
       profile,
       monthlyVolume: volume,
       acceptedBetaTerms: accepted,
@@ -96,26 +120,46 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
       cid,
     };
 
-    // Include hidden fields coming from the form (CRM/webhook)
+    // Include hidden fields (CRM/webhook)
     const leadId = String(formData.get('lead_id') || '');
     const userAgent = String(formData.get('user_agent') || '');
     if (leadId) payload.lead_id = leadId;
     if (userAgent) payload.user_agent = userAgent;
 
-    // Append UTMs (if not already present in payload)
+    // Append UTMs (if any)
     for (const k of UTM_KEYS) {
       const v = (utms as any)[k];
       if (v) payload[k] = String(v);
     }
 
     try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encodeFormUrl(payload),
-      });
+      if (USE_NETLIFY_FORMS) {
+        // Production: send to Netlify Forms
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-      // Do not send message content; only derived metrics
+        const res = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encodeFormUrl(payload),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          if (res.status === 429) setError('tooMany');
+          else if (res.status === 408 || res.status === 504) setError('timeout');
+          else setError('unknown');
+          return;
+        }
+      } else { 
+        // Dev (Vite): simulate success after delay
+        console.info('[DEV] Simulating POST / Netlify Forms. Payload:', payload);
+        await sleep(500);
+      }
+
+      // Tracking (avoid sending message content; only derived metrics)
       const common = {
         variant,
         profile,
@@ -129,14 +173,20 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
 
       track('lead_submit', common);
       track('beta_signup', common);
-
+      
       setSubmitted(true);
-      form.reset();
+      formEl.reset();
       setMessage('');
-    } catch {
+    } catch (err: any) {
+      if (err?.name === 'AbortError') setError('timeout');
+      else if (err instanceof TypeError) setError('network');
+      else setError('unknown');
+
       alert('Falha no envio. Por favor, tente novamente.');
-    }
-  }
+    } finally {
+      setSending(false);
+    }    
+  };
 
   return {
     // state
@@ -148,12 +198,18 @@ export function useBetaSignupForm({ variant, planHint, selectedPlanProp = '' }: 
     messageLen,
     hasPhone,
     planError,
+
     // derived tracking data
     utms,
     cid,
+
     // handlers
     handleFirstFocus,
     handlePlanChange,
     onSubmit,
+
+    // request lifecycle (for UI)
+    sending,
+    error,
   };
 }

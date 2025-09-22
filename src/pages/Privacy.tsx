@@ -381,7 +381,7 @@ export default function Privacy() {
             </p>
           </div>
           <p>
-            Para sua segurança, poderemos solicitar <strong>informações razoáveis para verificação de identidade</strong> antes de
+            <br />Para sua segurança, poderemos solicitar <strong>informações razoáveis para verificação de identidade</strong> antes de
             atender pedidos de acesso, correção, exclusão, portabilidade ou oposição. A portabilidade será atendida na medida do
             <strong> tecnicamente possível</strong> e sem violar <strong>segredos comerciais</strong>, <strong>direitos de terceiros</strong>
             ou <strong>medidas de segurança</strong>.

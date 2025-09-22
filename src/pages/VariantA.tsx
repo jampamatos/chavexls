@@ -78,14 +78,14 @@ export default function VariantA() {
             <Hero
               overline="ChaveXLS"
               title="Transforme XML de NF-e em planilha fiscal em segundos."
-              subtitle={<>Envie um ZIP e receba um XLSX multiabas pronto para conferência<br />(CFOP, NCM, CST, PIS/COFINS).</>}
+              subtitle={<>Envie um .zip com seus XML (55/65) e receba um XLSX multiabas pronto para conferência, com tipagem fiscal correta (CFOP, NCM, CST, PIS/COFINS), validações e deduplicação por chave.</>}
               primary={{ label: 'Entrar no Beta', onClick: handleBetaClick }}
               secondary={{ label: 'Reservar preço fundador (-30% / 12 meses)', onClick: () => handlePlanClick('founder', 'founder') }}
               helperText="Sem cartão de crédito. Convites do Beta enviados por e-mail."
               chips={[
-                { label: 'Sem cartão de crédito no Beta.', tone: 'emerald' },
+                { label: 'Sem cartão no Beta.', tone: 'emerald' },
                 { label: 'Deduplicação por chave', tone: 'blue' },
-                { label: 'LGPD: “apagar agora” + 48h', tone: 'amber' },
+                { label: 'LGPD: retenção 48h + "Apagar agora"', tone: 'amber' },
               ]}
               className="max-w-6xl mx-auto px-4 py-14"
             />
@@ -104,7 +104,7 @@ export default function VariantA() {
             </div>
 
             {/* DEMO PREVIEW */}
-            <XlsxPreview variant="A"/>
+            <XlsxPreview />
 
             {/* PLANS */}
             <Pricing
