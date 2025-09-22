@@ -4,6 +4,16 @@ import { formatBRL } from '../lib/utils';
 import { DEFAULT_FOUNDER_DISCOUNT, PRICE_BUSINESS, PRICE_STARTER } from '../lib/pricing';
 import { useBetaSignupForm } from '../hooks/useBetaSignupForm';
 
+// Centralized microcopy
+import {
+  formLabels,
+  formPlaceholders,
+  formHints,
+  cta,
+  a11y,
+  errors,
+} from '../copy/form';
+
 /** Props for the signup form component */
 type Props = { variant: "A" | "B"; selectedPlan?: 'starter' | 'business' | '' };
 /** Possible plan hints passed via query string */
@@ -55,6 +65,8 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     handleFirstFocus,
     handlePlanChange,
     onSubmit,
+    sending,
+    error,
   } = useBetaSignupForm({ variant, planHint, selectedPlanProp: selectedPlan });
 
   const planErrorId = planError ? `plan-error-${cid.replace(/[^a-zA-Z0-9_-]/g, '-')}` : undefined;
@@ -68,11 +80,10 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
     ? { main: PRICE_BUSINESS * (1 - FOUNDER_DISCOUNT), original: PRICE_BUSINESS }
     : { main: PRICE_BUSINESS, original: null as number | null };
 
-  // Logic moved to useBetaSignupForm
-
+    // Show thank you message if already submitted
   if (submitted) {
     return (
-      <p className="mt-4 text-sm" role="status" aria-live="polite">
+      <p className="mt-4 text-sm" role="status" aria-live="polite" aria-label={a11y.statusRegionLabel}>
         Obrigado! Enviaremos seu convite do Beta por e-mail.
         {founderMode ? (
           <>
@@ -92,6 +103,7 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
       onFocusCapture={handleFirstFocus}
       onSubmit={onSubmit}
       className="max-w-xl mx-auto space-y-3"
+      aria-describedby={planErrorId}
     >
       {/* Netlify hidden fields */}
       <input type="hidden" name="form-name" value="beta-signup" />
@@ -200,37 +212,85 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
           </label>
         </div>
       </fieldset>
+
+      { /* Plan error (alert region) */}
       {planError ? (
-        <p id={planErrorId} className="mt-1 text-sm text-red-600">
+        <p id={planErrorId} className="mt-1 text-sm text-red-600" role="alert" aria-live="assertive" aria-label={a11y.errorRegionLabel}>
           {planError}
         </p>
       ) : null}
 
+      { /* Name */ }
       <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-1">Nome (opcional)</label>
-        <input id="name" name="name" className="w-full border rounded px-3 py-2" placeholder="Maria Contábil" />
+        <label htmlFor="name" className="block text-sm font-medium mb-1">
+          {formLabels.name} <span className="sr-only">{a11y.requiredMark}</span>
+        </label>
+        <input 
+          id="name" 
+          name="name" 
+          className="w-full border rounded px-3 py-2" 
+          placeholder={formPlaceholders.name} 
+          autoComplete="name"
+        />
       </div>
 
+      { /* Email */ }
       <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-1">E-mail</label>
-        <input id="email" name="email" type="email" required className="w-full border rounded px-3 py-2" placeholder="seu@email.com.br" />
+        <label htmlFor="email" className="block text-sm font-medium mb-1">
+          {formLabels.email} <span className="text-red-600">*</span>
+        </label>
+        <input 
+          id="email" 
+          name="email" 
+          type="email" 
+          required 
+          className="w-full border rounded px-3 py-2" 
+          placeholder={formPlaceholders.email} 
+          autoComplete="email"
+          aria-describedby="email-hint"
+        />
+        <p id="email-hint" className="mt-1 text-xs text-muted-foreground">
+          {formHints.email}
+        </p>
       </div>
 
+      { /* Profile */ }
       <div>
-        <label htmlFor="profile" className="block text-sm font-medium mb-1">Perfil</label>
-        <select id="profile" name="profile" required className="w-full border rounded px-3 py-2">
-          <option value="">Escolha...</option>
-          <option>Contador</option>
-          <option>SMB</option>
+        <label htmlFor="profile" className="block text-sm font-medium mb-1">
+          {formLabels.profile} <span className="text-red-600">*</span>
+        </label>
+        <select 
+          id="profile" 
+          name="profile" 
+          required 
+          className="w-full border rounded px-3 py-2"
+          aria-describedby="profile-hint"
+          defaultValue=""
+        >
+          <option value="" disabled>Escolha...</option>
+          <option>Fiscal</option>
+          <option>Contábil</option>
+          <option>Compras</option>
+          <option>Empresário(a) / SMB</option>
           <option>MEI</option>
-          <option>Outros</option>
+          <option>Outro</option>
         </select>
       </div>
 
+      { /* Monthly volume */ }
       <div>
-        <label htmlFor="monthlyVolume" className="block text-sm font-medium mb-1">Volume Mensal de XMLs</label>
-        <select id="monthlyVolume" name="monthlyVolume" required className="w-full border rounded px-3 py-2">
-          <option value="">Escolha...</option>
+        <label htmlFor="monthlyVolume" className="block text-sm font-medium mb-1">
+          {formLabels.monthlyVolume} <span className="text-red-600">*</span>
+        </label>
+        <select 
+          id="monthlyVolume" 
+          name="monthlyVolume" 
+          required 
+          className="w-full border rounded px-3 py-2"
+          aria-describedby="volume-hint"
+          defaultValue=""
+        >
+          <option value="" disabled>Escolha...</option>
           <option value="10">Até 10</option>
           <option value="50">Até 50</option>
           <option value="100">Até 100</option>
@@ -238,10 +298,14 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
           <option value="1000">Até 1.000</option>
           <option value="5000">Mais de 1.000</option>
         </select>
+        <p id="volume-hint" className="mt-1 text-xs text-muted-foreground">
+          {formHints.monthlyVolume}
+        </p>
       </div>
 
+      { /* Message */ }
       <div>
-        <label htmlFor="message" className="block text-sm font-medium mb-1">Mensagem (opcional)</label>
+        <label htmlFor="message" className="block text-sm font-medium mb-1">{formLabels.message}</label>
         <textarea
           id="message"
           name="message"
@@ -249,27 +313,46 @@ export default function BetaSignupForm({ variant, selectedPlan = '' }: Props) {
           maxLength={500}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Escreva dúvidas, sugestões ou deixe um telefone/WhatsApp para contato."
+          placeholder={formPlaceholders.message}
           className="w-full border rounded px-3 py-2"
+          aria-describedby="message-hint message-count"
         />
         <div className="mt-1 flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">Não compartilhe dados sensíveis (senhas, chaves, etc.).</p>
+          <p id="message-hint" className="text-xs text-muted-foreground">
+            Não compartilhe dados sensíveis (senhas, chaves, etc.).
+          </p>
           <span className="text-xs text-muted-foreground">{message.length}/500</span>
         </div>
       </div>
 
+      { /* Consent */ }
       <label className="inline-flex items-center gap-2">
-        <input name="acceptedBetaTerms" type="checkbox" required />
+        <input name="acceptedBetaTerms" type="checkbox" required aria-describedby="consent-hint" />
         <span>
-          Concordo com os{' '}
+          Li e aceito os {' '}
           <a href="/terms" target="_blank" rel="noopener" className="underline">Termos do Beta</a>
-          {' '}e{' '}
+          {' '}e a{' '}
           <a href="/privacy" target="_blank" rel="noopener" className="underline">Política de Privacidade</a>.
         </span>
       </label>
+      <p id="consent-hint" className="text-xs text-muted-foreground -mt-1">
+        {formHints.consent}
+      </p>
 
-      <button type="submit" className="w-full bg-primary text-primary-foreground py-2 rounded-xl">
-        Entrar no Beta Gratuito
+      { /* Network/server error */ }
+      {error ? (
+        <p role="alert" aria-live="assertive" className="text-sm text-red-600">
+          {errors[error]}
+        </p>
+      ) : null}
+
+      { /* Submit button */ }
+      <button 
+        type="submit" 
+        disabled={sending}
+        className="w-full bg-[var(--brand-navy)] text-white py-2 rounded-xl hover:opacity-95 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {sending ? 'Enviando...' : cta(variant)}
       </button>
     </form>
   );

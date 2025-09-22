@@ -7,24 +7,21 @@ export type FAQItem = {
 };
 
 type FAQProps = {
-  /** A | B: controla o texto do item de preço */
+  /** A | B: controls the pricing answer */
   variant?: 'A' | 'B';
-  /** Section title (default: "Perguntas Frequentes") */
+  /** Section title */
   title?: string;
-  /** Optional descriptive text under the title */
+  /** Optional description under the title */
   description?: string;
-  /** List of Q&As; if provided, overrides the defaults */
+  /** Custom items; if provided, overrides defaults */
   items?: FAQItem[];
-  /** Optional id for deep-linking, e.g. "#faq" */
+  /** Optional id for deep-linking */
   id?: string;
-  /** Extra classes for the outer section (spacing/layout handled by the page) */
+  /** Extra classes for outer section */
   className?: string;
-  /**
-   * Optional callback fired when a question is toggled.
-   * Useful if the page wants to track analytics (e.g. GA4).
-   */
+  /** Analytics hook */
   onToggle?(question: string, isOpen: boolean): void;
-};
+}
 
 /* Tiny inline chevron (no deps) */
 function ChevronIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -35,81 +32,88 @@ function ChevronIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-/** Base (itens comuns nas duas variantes) — LGPD, limites e operação */
+/** Base (common items for both variants) — LGPD, limits and operation */
 const BASE_ITEMS: FAQItem[] = [
   {
-    q: 'Quais XMLs são suportados?',
-    a: <>Modelos <strong>55</strong> (NF-e) e <strong>65</strong> (NFC-e). Envie em um arquivo <code>.zip</code> com os XML.</>,
-  },
-  {
-    q: 'O que vem no XLSX?',
+    q: 'Quais XML vocês aceitam?',
     a: (
       <>
-        Abas: <em>Notas</em>, <em>Itens</em>, <em>Emitentes</em>, <em>Destinatários</em>, <em>Totais</em> e <em>Totais_NCM_CFOP</em>.
-        Colunas já tipadas (CFOP, NCM, CST, PIS/COFINS) e marcação de canceladas/denegadas.
+        Trabalhamos com os modelos <strong>55</strong> (NF-e) e <strong>65</strong> (NFC-e).
+        Você pode juntar todos os arquivos em um <code>.zip</code> e enviar. Simples assim!
       </>
     ),
   },
   {
-    q: 'Há limites no Beta?',
+    q: 'O que vem na planilha?',
     a: (
       <>
-        Sim, temos limites de volume e fila durante o Beta. Se seu ZIP for muito grande, recomendamos dividir em partes.
-        Convites e prioridades são enviados por e-mail.
+        Você recebe um <strong>XLSX multiabas</strong> com <em>Notas</em>, <em>Itens</em>, <em>Emitentes</em>, <em>Destinatários</em> e <em>Totais</em>,
+        além de uma visão por <em>NCM/CFOP</em>. As colunas já chegam <strong>tipadas</strong> (CFOP, NCM, CST, PIS/COFINS) e
+        marcamos notas <em>canceladas</em> e <em>denegadas</em>.
       </>
     ),
   },
   {
-    q: 'Como funciona “Apagar agora”?',
+    q: 'Há limites durante o Beta?',
     a: (
       <>
-        Você pode solicitar <strong>exclusão imediata</strong> dos arquivos do processamento. Isso remove os dados do armazenamento ativo.
+        Sim. Para garantir estabilidade, trabalhamos com fila e limites de volume.
+        Se o seu <code>.zip</code> for muito grande, vale dividir em partes. Convites e acessos prioritários serão enviados por e-mail.
       </>
     ),
   },
   {
-    q: 'Qual a retenção e o que fica em logs?',
+    q: 'Como funciona o “Apagar agora”?',
     a: (
       <>
-        Arquivos expiram em <strong>48h</strong>. Logs técnicos não guardam dados fiscais sensíveis (usamos apenas metadados mínimos
-        para auditoria e estabilidade do serviço).
+        É um atalho da LGPD: você pode solicitar a <strong>exclusão imediata</strong> dos arquivos usados no processamento.
+        Assim que acionado, removemos os dados do armazenamento ativo.
       </>
     ),
   },
   {
-    q: 'Cookies e consentimento',
+    q: 'Por quanto tempo meus dados ficam guardados? E os logs?',
     a: (
       <>
-        Medição (GA4) só é ativada <strong>após seu consentimento</strong>. Sem opt-in, não enviamos eventos. Cookies de marketing
-        permanecem desativados por padrão.
+        Os arquivos expiram automaticamente em <strong>48h</strong>. Nossos logs técnicos não guardam dados fiscais sensíveis, apenas metadados
+        mínimos para auditoria e estabilidade do serviço.
       </>
     ),
   },
   {
-    q: 'Erros comuns no upload (como resolver)?',
+    q: 'E os cookies/consentimento?',
+    a: (
+      <>
+        O armazenamento de dados métricos só acontece <strong>depois da sua aceitação</strong>. Sem consentimento, não disparamos eventos.
+        Cookies de marketing permanecem desativados por padrão.
+      </>
+    ),
+  },
+  {
+    q: 'Meu upload deu erro. E agora?',
     a: (
       <ul className="list-disc pl-5">
-        <li>ZIP sem XML ou com subpastas profundas → coloque apenas os <code>.xml</code> na raiz do ZIP.</li>
-        <li>Arquivos corrompidos/especiais → garanta que são NF-e/NFC-e válidos (55/65).</li>
-        <li>Nomes com caracteres incomuns → renomeie se necessário (ASCII simples ajuda).</li>
+        <li>Verifique se o ZIP está sem XML ou com subpastas profundas, e coloque os <code>.xml</code> na raiz do <code>.zip</code>.</li>
+        <li>Verifique se os arquivos estão fora do padrão: aceitamos NF-e/NFC-e válidos (55/65).</li>
+        <li>Verifique arquivos com nomes estranhos. Renomear usando caracteres simples costuma resolver.</li>
       </ul>
     ),
   },
   {
-    q: 'Segurança dos dados',
+    q: 'Como vocês cuidam da segurança?',
     a: (
       <>
-        Tráfego sob <strong>HTTPS/TLS</strong>, armazenamento temporário com acesso restrito e políticas de segurança publicadas
-        nos nossos headers. Não retemos dados além do necessário para operação do Beta.
+        Todo o tráfego é feito via <strong>HTTPS/TLS</strong>, o que garante a segurança dos dados em trânsito. O armazenamento temporário 
+        tem acesso restrito e políticas de segurança publicadas em cabeçalhos. Não retemos dados além do necessário para operar o Beta.
       </>
     ),
   },
   {
-    q: 'Como falo com suporte?',
+    q: 'Preciso falar com alguém — como faço?',
     a: (
       <>
-        Durante o Beta, responda o e-mail do convite ou a mensagem de retorno que você receber após envio do formulário. Assim
-        conseguimos rastrear seu caso mais rápido.
+        Durante o Beta, responda o e-mail do convite ou a mensagem que você recebe após o formulário.
+        Assim conseguimos localizar seu caso rapidamente.
       </>
     ),
   },
@@ -118,37 +122,39 @@ const BASE_ITEMS: FAQItem[] = [
 export default function FAQ({
   variant = 'A',
   title = 'Perguntas Frequentes',
-  description = 'LGPD em primeiro lugar, limites do Beta claros e planilha fiscal pronta para conferência.',
+  description = 'Tudo o que você precisa saber sobre LGPD, limites do Beta e o que vem na planilha.',
   items,
   id = 'faq',
   className = '',
   onToggle,
 }: FAQProps) {
-  // item de preço conforme a variante (A tem desconto; B não menciona desconto)
+  // Pricing item varies by variant
   const priceItem: FAQItem =
     variant === 'B'
       ? {
           q: 'Quanto vai custar após o Beta?',
-          a: <>Planos previstos: <strong>Starter R$ 19,90/mês</strong> e <strong>Business R$ 59,90/mês</strong>. Sem cobrança durante o Beta.</>,
+          a: <>
+            Planos previstos: <strong>Starter R$ 19,90/mês</strong> e <strong>Business R$ 59,90/mês</strong>.
+            Durante o Beta não há cobrança.
+          </>,
         }
       : {
           q: 'Quanto vai custar após o Beta?',
           a: (
             <>
               Planos previstos: <strong>Starter R$ 19,90/mês</strong> e <strong>Business R$ 59,90/mês</strong>.
-              Quem testar no Beta tem <strong>-30% por 12 meses</strong> (voucher enviado por e-mail; condições e validade informadas no voucher).
+              Quem participa do Beta recebe um <strong>voucher de −30% por 12 meses</strong> (enviado por e-mail, com condições e validade).
             </>
           ),
         };
 
-  // ordem final: conteúdo base + preço (padrão) ou itens customizados via props
   const resolvedItems = items ?? [...BASE_ITEMS, priceItem];
 
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className={className}>
       <h2
         id={`${id}-heading`}
-        className="text-3xl font-bold text-center mb-4"
+        className="text-3xl font-bold text-center mb-3"
         style={{ color: 'var(--brand-navy)' }}
       >
         {title}
@@ -158,20 +164,24 @@ export default function FAQ({
         <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-6">{description}</p>
       ) : null}
 
-      <div className="grid md:grid-cols-2 gap-4">
+      {/* Single column for comfortable reading */}
+      <div className="mx-auto max-w-3xl space-y-3">
         {resolvedItems.map(({ q, a }, idx) => {
           const detailsId = `${id}-item-${idx}`;
           return (
             <details
               key={detailsId}
-              className="group rounded-xl border bg-white p-4"
+              className="group rounded-xl border bg-white p-4 transition-shadow duration-200 hover:shadow-sm group-open:shadow-md"
               onToggle={(e) => onToggle?.(q, (e.currentTarget as HTMLDetailsElement).open)}
             >
-              <summary className="flex items-start justify-between gap-3 font-medium cursor-pointer">
+              <summary className="flex items-start justify-between gap-3 font-medium cursor-pointer select-none">
                 <span>{q}</span>
-                <ChevronIcon className="mt-1 h-4 w-4 shrink-0 text-slate-500 transition-transform group-open:rotate-180" />
+                <ChevronIcon className="mt-1 h-4 w-4 shrink-0 text-slate-500 transition-transform duration-300 group-open:rotate-180" />
               </summary>
-              <div className="mt-2 text-sm text-muted-foreground">{a}</div>
+              <div className="
+                mt-2 text-sm text-muted-foreground leading-relaxed opacity-0 -translate-y-1 transition-all duration-300 ease-out 
+                group-open:opacity-100 group-open:translate-y-0"
+              >{a}</div>
             </details>
           );
         })}
