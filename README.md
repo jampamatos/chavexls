@@ -1,69 +1,79 @@
-# React + TypeScript + Vite
+# ChaveXLS — Landing Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Landing page premium para o app ChaveXLS (conversão de XML de NF-e em planilhas fiscais).  
+Este repositório **não é o produto**: ele entrega a **experiência de marketing** já pronta para captação de leads, validação de demanda e oferta de Beta. O app completo ainda pode ser construído.
 
-Currently, two official plugins are available:
+## Por que esse projeto é vendável
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Copy e narrativa prontas**: promessa clara, prova social via demo local, e argumentos de valor para contábil/fiscal.
+- **Design system leve**: tokens de cor, tipografia e componentes reutilizáveis (Tailwind v4 + CSS tokens).
+- **A/B testing nativo**: variantes A e B com roteamento inteligente e persistência de variante.
+- **LGPD e confiança**: páginas de Termos, Privacidade e Subprocessadores já estruturadas.
+- **Captação em produção**: formulário integrado ao Netlify com UTMs e parâmetros de campanha.
+- **Demo realista**: geração de XLSX de exemplo 100% local no navegador (ExcelJS).
 
-## Expanding the ESLint configuration
+## Estado atual (o que existe hoje)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Landing page completa com seções: Hero, Como funciona, Público-alvo, Benefícios, Pricing, FAQ, Segurança/LGPD e CTA final.
+- Variantes A/B já implementadas (`VariantA` e `VariantB`) com tracking.
+- Formulário de inscrição no Beta (Netlify forms + campos ocultos de UTM).
+- Playground de demo com geração de XLSX de exemplo **offline**.
+- Páginas legais: Termos, Privacidade e Subprocessadores.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## O que ainda falta (escopo do app)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Upload real de ZIP com XML (55/65) e processamento backend.
+- Pipeline de validação fiscal + geração de XLSX final.
+- Painel do usuário, autenticação e billing.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Stack
+
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS v4 (tokens em `src/index.css`)
+- React Router (páginas legais e variantes)
+- ExcelJS (geração de XLSX no demo)
+
+## Como rodar localmente
+
+Requisitos: Node `>=22.12.0 <23`
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts úteis
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `npm run dev` — dev server
+- `npm run build` — build de produção
+- `npm run preview` — preview local do build
+- `npm run lint` — lint do projeto
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Estrutura rápida
+
+- `src/pages/VariantA.tsx` — landing versão A (ênfase em preço fundador)
+- `src/pages/VariantB.tsx` — landing versão B (ênfase em demo)
+- `src/components/` — seções e blocos reutilizáveis
+- `src/lib/analytics.ts` — tracking + consentimento
+- `src/lib/utm.ts` — captura e persistência de UTMs
+- `src/pages/Terms.tsx` — Termos do Beta
+- `src/pages/Privacy.tsx` — Política de Privacidade
+- `src/pages/Subprocessors.tsx` — Subprocessadores (LGPD)
+
+## Variantes A/B
+
+- Aleatório 50/50 na primeira visita, com persistência via `localStorage`.
+- Forçar variante com querystring: `/?v=a` ou `/?v=b`.
+
+## Observações de produto (para próximos passos)
+
+Este repo está pronto para **validar demanda e captar leads**.  
+Se for transformar em app completo, o próximo passo natural é conectar:
+
+- upload real de XML,
+- serviço de processamento,
+- geração de planilhas finais por backend,
+- autenticação e cobrança.
+
+Dessa forma, o MVP completo entregaria valor real ao usuário final.
